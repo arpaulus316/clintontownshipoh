@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application for Conditional Use Permit - Clinton Township</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.4;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .form-container {
+      max-width: 8.5in;
+      margin: 0 auto;
+      background: white;
+      padding: 0.75in;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .form-container { box-shadow: none; padding: 0.5in; }
+      .print-btn { display: none; }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      border-bottom: 3px solid #1e3a5f;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 18pt; font-weight: 700; color: #1e3a5f; letter-spacing: 1px; margin-bottom: 4px; }
+    .header h2 { font-size: 13pt; font-weight: 600; color: #2c5282; margin-bottom: 4px; }
+    .header h3 { font-size: 12pt; font-weight: 400; color: #444; }
+    .header .revision { font-size: 9pt; color: #666; margin-top: 5px; }
+
+    /* Info boxes */
+    .info-box {
+      background: #e8f4f8;
+      border-left: 4px solid #1e3a5f;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 10pt;
+    }
+    .info-box.warning {
+      background: #fff8e6;
+      border-left-color: #d69e2e;
+    }
+    .info-box.orange {
+      background: #fff3e0;
+      border-left-color: #e07820;
+    }
+    .info-box strong { display: block; margin-bottom: 4px; }
+    .info-box ul { margin-left: 18px; margin-top: 4px; }
+    .info-box li { margin-bottom: 2px; }
+
+    /* Section titles */
+    .section { margin-bottom: 20px; }
+    .section-title {
+      background: #1e3a5f;
+      color: white;
+      padding: 7px 12px;
+      font-size: 10.5pt;
+      font-weight: 700;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Form layout */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .form-group { flex: 1; min-width: 180px; }
+    .form-group.full-width { flex: 100%; min-width: 100%; }
+    .form-group.half-width { flex: 0 0 calc(50% - 7px); min-width: calc(50% - 7px); }
+    .form-group.third-width { flex: 0 0 calc(33.333% - 10px); min-width: 140px; }
+    .form-group.quarter-width { flex: 0 0 calc(25% - 11px); min-width: 110px; }
+
+    .form-group label {
+      display: block;
+      font-size: 9pt;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .write-line {
+      border: none;
+      border-bottom: 1px solid #555;
+      width: 100%;
+      min-height: 22px;
+      display: block;
+      background: transparent;
+    }
+
+    .write-box {
+      border: 1px solid #aaa;
+      width: 100%;
+      min-height: 70px;
+      display: block;
+      background: #fafafa;
+      padding: 4px 6px;
+    }
+    .write-box.tall { min-height: 100px; }
+    .write-box.short { min-height: 45px; }
+
+    /* Justification items */
+    .justification-item {
+      margin-bottom: 18px;
+      page-break-inside: avoid;
+    }
+    .justification-item .criteria {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #1e3a5f;
+      margin-bottom: 6px;
+      padding-left: 24px;
+      position: relative;
+    }
+    .justification-item .criteria::before {
+      content: attr(data-letter) ".";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
+    .response-label {
+      font-size: 9pt;
+      color: #555;
+      margin-bottom: 4px;
+      font-style: italic;
+    }
+
+    /* Attach checklist */
+    .attach-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .attach-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .attach-row .attach-label { font-size: 10pt; line-height: 1.5; }
+    .attach-row .attach-label em { font-size: 9pt; color: #666; display: block; }
+
+    /* Certification */
+    .cert-text {
+      font-size: 10pt;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    /* Signature block */
+    .sig-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .sig-group { flex: 1; }
+    .sig-group.narrow { flex: 0 0 200px; }
+    .sig-line {
+      border-bottom: 1px solid #333;
+      min-height: 32px;
+      margin-bottom: 3px;
+    }
+    .sig-label { font-size: 9pt; color: #666; }
+
+    /* Office use only */
+    .office-use {
+      background: #f2f2f2;
+      border: 2px solid #1e3a5f;
+      padding: 15px;
+      margin-top: 28px;
+    }
+    .office-use .section-title { margin: -15px -15px 14px -15px; }
+
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .condition-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10pt;
+    }
+    .condition-line span { flex-shrink: 0; font-weight: 600; }
+    .condition-line .write-line { flex: 1; }
+
+    .option-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5pt;
+    }
+    .option-item input[type="radio"] {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 2px solid #1e3a5f;
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+    }
+    .footer .office-note {
+      font-size: 9.5pt;
+      color: #333;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* Print button */
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e3a5f;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 12pt;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .print-btn:hover { background: #2c5282; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>APPLICATION FOR CONDITIONAL USE PERMIT</h1>
+      <h2>Board of Zoning Appeals</h2>
+      <h3>Clinton Township, Shelby County, Ohio</h3>
+      <p class="revision">Rev. 01/2026</p>
+    </div>
+
+    <!-- FEE / REFERENCE INFO -->
+    <div class="info-box">
+      <strong>Application Fee: $375.00</strong>
+      Fee must accompany application. Make checks payable to Clinton Township.
+    </div>
+
+    <div class="info-box">
+      <strong>What is a Conditional Use Permit?</strong>
+      A conditional use permit allows for a land use that is permitted within a zoning district only when specific conditions are met. The Board of Zoning Appeals reviews each request to ensure the proposed use is appropriate for the location and will not adversely affect surrounding properties or the general welfare of the community.
+    </div>
+
+    <!-- SECTION 1: APPLICANT INFORMATION -->
+    <div class="section">
+      <div class="section-title">Section 1 &mdash; Applicant Information</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name of Applicant *</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Telephone *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Mailing Address *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Email Address</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Name of Property Owner (if different from applicant)</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: PROPERTY INFORMATION -->
+    <div class="section">
+      <div class="section-title">Section 2 &mdash; Property Information</div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Address / Location of Property *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group quarter-width">
+          <label>Section</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group quarter-width">
+          <label>Township</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group quarter-width">
+          <label>Range</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group quarter-width">
+          <label>Parcel / Tax ID No.</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half-width">
+          <label>Current Zoning District</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group half-width">
+          <label>Current / Existing Use of Property</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group third-width">
+          <label>Lot Width</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Lot Depth</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Lot Area (sq ft / acres)</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: NATURE OF REQUEST -->
+    <div class="section">
+      <div class="section-title">Section 3 &mdash; Nature of Request</div>
+
+      <div class="form-group full-width" style="margin-bottom:12px;">
+        <label>Proposed Conditional Use Being Requested *</label>
+        <p style="font-size:9pt; color:#666; margin-bottom:5px; font-style:italic;">
+          Describe in detail the use you are proposing (e.g., home occupation, group home, agricultural processing facility, communications tower, etc.)
+        </p>
+        <div class="write-box tall"></div>
+      </div>
+
+      <div class="form-group full-width" style="margin-bottom:12px;">
+        <label>Zoning Resolution Section Under Which Conditional Use is Requested</label>
+        <p style="font-size:9pt; color:#666; margin-bottom:5px; font-style:italic;">
+          Reference the specific chapter and section of the Clinton Township Zoning Regulations that lists this as a permitted conditional use.
+        </p>
+        <div class="write-line"></div>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Description of Proposed Structures, Buildings, or Site Improvements (if any)</label>
+        <div class="write-box"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: REQUIRED DOCUMENTATION -->
+    <div class="section">
+      <div class="section-title">Section 4 &mdash; Required Documentation</div>
+
+      <div class="info-box">
+        <strong>Plans drawn to scale must accompany this application showing:</strong>
+        <ul>
+          <li>Dimensions and shape of the lot</li>
+          <li>Size and location of all existing buildings, structures, and septic system</li>
+          <li>Location and dimensions of any proposed buildings, structures, or alterations</li>
+          <li>Proposed access, parking areas, and driveways</li>
+          <li>Any natural or topographic features relevant to the request</li>
+        </ul>
+      </div>
+
+      <div class="info-box orange">
+        <strong>Additional Required Items:</strong>
+        <ul>
+          <li><strong>List of Adjacent Property Owners:</strong> Provide names and mailing addresses of all owners of property within 500 feet of the subject property.</li>
+          <li><strong>Written Statements:</strong> Provide written statements addressing each of the standards in Section 5 of this application (see below).</li>
+        </ul>
+      </div>
+
+      <p style="font-size:10pt; font-weight:600; margin-bottom:10px;">Check each item enclosed with this application:</p>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Site Plan / Survey</strong> (drawn to scale, showing all dimensions, existing structures, septic system) *
+          <em>Required</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Building or Construction Plans</strong>
+          <em>If new construction or structural alteration is proposed</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>List of Adjacent Property Owners</strong> (names and mailing addresses of all owners within 500 feet) *
+          <em>Required</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Written Statement Addressing Each Standard in Section 5</strong> *
+          <em>Required</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Additional Supporting Documents</strong>
+          <em>If applicable (photos, reports, letters of support, etc.)</em>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:10px;">
+        <div class="form-group full-width">
+          <label>Application Fee — Check / Money Order No.</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: STANDARDS FOR APPROVAL -->
+    <div class="section">
+      <div class="section-title">Section 5 &mdash; Standards for Approval</div>
+
+      <div class="info-box warning">
+        <strong>Important:</strong>
+        In order for a conditional use permit to be granted, the applicant must demonstrate to the Board of Zoning Appeals that <strong>all</strong> of the following standards are satisfied. Please provide detailed written responses for each item.
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="A">The proposed use is specifically listed as a conditional use within the applicable zoning district</div>
+        <p class="response-label">Identify the zoning district and cite the section of the zoning regulations that permits this use conditionally:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="B">The proposed use is consistent with the general purpose and intent of the Clinton Township Zoning Regulations</div>
+        <p class="response-label">Explain how the proposed use is compatible with the goals and intent of the zoning regulations:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="C">The proposed use will not be detrimental to adjacent properties, the neighborhood, or the general public welfare</div>
+        <p class="response-label">Explain how the proposed use will avoid negative impacts on surrounding properties, traffic, noise, light, or safety:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="D">Adequate utilities, access roads, drainage, and other necessary facilities exist or will be provided</div>
+        <p class="response-label">Describe the availability or planned provision of utilities, water, sewer/septic, road access, and stormwater management:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="E">The proposed use is consistent with the character of the surrounding area and will not create an incompatible land use</div>
+        <p class="response-label">Describe how the proposed use fits the surrounding land uses and overall character of the area:</p>
+        <div class="write-box"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: CERTIFICATION -->
+    <div class="section">
+      <div class="section-title">Section 6 &mdash; Applicant Certification</div>
+
+      <div class="cert-text">
+        The undersigned hereby applies for a Conditional Use Permit as described in this application. The applicant certifies that all information contained in this application and its attachments is true and correct. The applicant understands that providing false or misleading information may result in denial of this permit and/or revocation of any approval granted. The applicant also understands that approval of a conditional use permit may be subject to conditions imposed by the Board of Zoning Appeals, and that any violation of those conditions shall be grounds for revocation.
+      </div>
+
+      <div class="sig-row">
+        <div class="sig-group">
+          <div class="sig-line"></div>
+          <div class="sig-label">Signature of Applicant</div>
+        </div>
+        <div class="sig-group narrow">
+          <div class="sig-line"></div>
+          <div class="sig-label">Date</div>
+        </div>
+      </div>
+
+      <div class="sig-row" style="margin-top: 20px;">
+        <div class="sig-group">
+          <div class="sig-line"></div>
+          <div class="sig-label">Signature of Property Owner (if different from applicant)</div>
+        </div>
+        <div class="sig-group narrow">
+          <div class="sig-line"></div>
+          <div class="sig-label">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFICE USE ONLY -->
+    <div class="office-use">
+      <div class="section-title">For Office Use Only</div>
+
+      <div class="form-row">
+        <div class="form-group third-width">
+          <label>Application No.</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Date Filed</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Fee Paid ($)</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group third-width">
+          <label>Notice to Parties</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Notice to Newspapers</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Public Hearing Date</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:6px;">Decision of Board of Zoning Appeals</label>
+        <div class="option-row">
+          <div class="option-item">
+            <input type="radio" name="decision" disabled>
+            <span>Approved</span>
+          </div>
+          <div class="option-item">
+            <input type="radio" name="decision" disabled>
+            <span>Approved with Conditions</span>
+          </div>
+          <div class="option-item">
+            <input type="radio" name="decision" disabled>
+            <span>Denied</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:8px;">Conditions of Approval (if any)</label>
+        <div class="conditions-grid">
+          <div class="condition-line"><span>1.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>2.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>3.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>4.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>5.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>6.</span><div class="write-line"></div></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:6px;">If Denied, Reason for Denial</label>
+        <div class="write-box short"></div>
+      </div>
+
+      <div class="sig-row">
+        <div class="sig-group">
+          <div class="sig-line"></div>
+          <div class="sig-label">Board of Zoning Appeals — Chairperson</div>
+        </div>
+        <div class="sig-group narrow">
+          <div class="sig-line"></div>
+          <div class="sig-label">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Clinton Township, Shelby County, Ohio &nbsp;&mdash;&nbsp; Questions? Contact the Zoning Administrator: 937-538-9895</p>
+      <p class="office-note">Note: One (1) copy to be filed with the Zoning Administrator and two (2) with the Board of Zoning Appeals.</p>
+    </div>
+
+  </div>
+
+  <button class="print-btn" onclick="window.print()">Print Form</button>
+</body>
+</html>

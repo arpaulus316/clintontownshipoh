@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application for Variance - Clinton Township</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.4;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .form-container {
+      max-width: 8.5in;
+      margin: 0 auto;
+      background: white;
+      padding: 0.75in;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .form-container { box-shadow: none; padding: 0.5in; }
+      .print-btn { display: none; }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      border-bottom: 3px solid #1e3a5f;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 20pt; font-weight: 700; color: #1e3a5f; letter-spacing: 1px; margin-bottom: 4px; }
+    .header h2 { font-size: 13pt; font-weight: 600; color: #2c5282; margin-bottom: 4px; }
+    .header h3 { font-size: 12pt; font-weight: 400; color: #444; }
+    .header .revision { font-size: 9pt; color: #666; margin-top: 5px; }
+
+    /* Info boxes */
+    .info-box {
+      background: #e8f4f8;
+      border-left: 4px solid #1e3a5f;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 10pt;
+    }
+    .info-box.warning {
+      background: #fff8e6;
+      border-left-color: #d69e2e;
+    }
+    .info-box.orange {
+      background: #fff3e0;
+      border-left-color: #e07820;
+    }
+    .info-box strong { display: block; margin-bottom: 4px; }
+    .info-box ul { margin-left: 18px; margin-top: 4px; }
+    .info-box li { margin-bottom: 2px; }
+
+    /* Section titles */
+    .section { margin-bottom: 20px; }
+    .section-title {
+      background: #1e3a5f;
+      color: white;
+      padding: 7px 12px;
+      font-size: 10.5pt;
+      font-weight: 700;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Form layout */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .form-group { flex: 1; min-width: 180px; }
+    .form-group.full-width { flex: 100%; min-width: 100%; }
+    .form-group.half-width { flex: 0 0 calc(50% - 7px); min-width: calc(50% - 7px); }
+    .form-group.third-width { flex: 0 0 calc(33.333% - 10px); min-width: 140px; }
+
+    .form-group label {
+      display: block;
+      font-size: 9pt;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .write-line {
+      border: none;
+      border-bottom: 1px solid #555;
+      width: 100%;
+      min-height: 22px;
+      display: block;
+      background: transparent;
+    }
+
+    .write-box {
+      border: 1px solid #aaa;
+      width: 100%;
+      min-height: 70px;
+      display: block;
+      background: #fafafa;
+      padding: 4px 6px;
+    }
+
+    .write-box.tall { min-height: 100px; }
+    .write-box.short { min-height: 50px; }
+
+    /* Justification items */
+    .justification-item {
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+    .justification-item .criteria {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #1e3a5f;
+      margin-bottom: 6px;
+      padding-left: 24px;
+      position: relative;
+    }
+    .justification-item .criteria::before {
+      content: attr(data-letter) ".";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
+    .response-label {
+      font-size: 9pt;
+      color: #555;
+      margin-bottom: 4px;
+      font-style: italic;
+    }
+
+    /* Attach row */
+    .attach-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .attach-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .attach-row .attach-label { font-size: 10pt; line-height: 1.5; }
+    .attach-row .attach-label em { font-size: 9pt; color: #666; display: block; }
+
+    /* Certification */
+    .cert-text {
+      font-size: 10pt;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    /* Signature block */
+    .sig-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .sig-group { flex: 1; }
+    .sig-group.narrow { flex: 0 0 200px; }
+    .sig-line {
+      border-bottom: 1px solid #333;
+      min-height: 32px;
+      margin-bottom: 3px;
+    }
+    .sig-label { font-size: 9pt; color: #666; }
+
+    /* Office use only */
+    .office-use {
+      background: #f2f2f2;
+      border: 2px solid #1e3a5f;
+      padding: 15px;
+      margin-top: 28px;
+    }
+    .office-use .section-title { margin: -15px -15px 14px -15px; }
+
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .condition-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10pt;
+    }
+    .condition-line span { flex-shrink: 0; font-weight: 600; }
+    .condition-line .write-line { flex: 1; }
+
+    /* Radio / checkbox inline */
+    .option-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5pt;
+    }
+    .option-item input[type="radio"],
+    .option-item input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 2px solid #1e3a5f;
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+    }
+    .footer .office-note {
+      font-size: 9.5pt;
+      color: #333;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* Print button */
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e3a5f;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 12pt;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .print-btn:hover { background: #2c5282; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>APPLICATION FOR VARIANCE</h1>
+      <h2>Board of Zoning Appeals</h2>
+      <h3>Clinton Township, Shelby County, Ohio</h3>
+      <p class="revision">Rev. 01/2026</p>
+    </div>
+
+    <!-- FEE / REFERENCE INFO -->
+    <div class="info-box">
+      <strong>Application Fee: $375.00</strong>
+      Fee must accompany application. Make checks payable to Clinton Township.
+    </div>
+
+    <div class="info-box">
+      <strong>Clinton Township Zoning Regulations</strong>
+      Section 1111, Chapter 11 &mdash; Appeals and Variances
+    </div>
+
+    <!-- SECTION 1: APPLICANT INFORMATION -->
+    <div class="section">
+      <div class="section-title">Section 1 &mdash; Applicant Information</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name of Applicant *</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Telephone *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Mailing Address *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Address of Property Where Variance is Requested *</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: NATURE OF VARIANCE -->
+    <div class="section">
+      <div class="section-title">Section 2 &mdash; Nature of Variance</div>
+      <div class="form-group full-width">
+        <label>Describe generally the nature of this variance request *</label>
+        <p style="font-size:9pt; color:#666; margin-bottom:5px; font-style:italic;">
+          Explain what variance you are requesting and why (e.g., reduced setback, increased building height, lot coverage exception, etc.)
+        </p>
+        <div class="write-box tall"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: REQUIRED DOCUMENTATION -->
+    <div class="section">
+      <div class="section-title">Section 3 &mdash; Required Documentation</div>
+
+      <div class="info-box">
+        <strong>Plans drawn to scale must accompany this application showing:</strong>
+        <ul>
+          <li>Dimensions and shape of the lot</li>
+          <li>Size and location of existing buildings and septic system</li>
+          <li>Locations and dimensions of proposed buildings or alterations</li>
+          <li>Any natural or topographic peculiarities of the lot in question</li>
+        </ul>
+      </div>
+
+      <div class="info-box orange">
+        <strong>Additional Required Items:</strong>
+        <ul>
+          <li><strong>List of Adjacent Property Owners:</strong> Provide names and mailing addresses of all owners of property within 500 feet of the property for which the variance is sought.</li>
+          <li><strong>Written Statements:</strong> Provide written statements which address the standards set forth in Section 1111 of Chapter 11 (Appeals and Variances) of the Clinton Township Zoning Regulations.</li>
+        </ul>
+      </div>
+
+      <p style="font-size:10pt; font-weight:600; margin-bottom:10px;">Check each item enclosed with this application:</p>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Site Plan / Survey</strong> (showing lot dimensions, existing buildings, septic system) *
+          <em>Required</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Building Plans / Drawings</strong>
+          <em>If applicable</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>List of Adjacent Property Owners</strong> (names and mailing addresses of all owners within 500 feet) *
+          <em>Required</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Written Statement Addressing Section 1111 Standards</strong> *
+          <em>Required — see Section 4 below and refer to Chapter 11 of the Clinton Township Zoning Regulations</em>
+        </div>
+      </div>
+
+      <div class="attach-row">
+        <input type="checkbox">
+        <div class="attach-label">
+          <strong>Additional Supporting Documents</strong>
+          <em>If applicable</em>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:10px;">
+        <div class="form-group full-width">
+          <label>Application Fee — Check / Money Order No.</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: JUSTIFICATION OF VARIANCE -->
+    <div class="section">
+      <div class="section-title">Section 4 &mdash; Justification of Variance</div>
+
+      <div class="info-box warning">
+        <strong>Important:</strong>
+        In order for a variance to be granted, the applicant must prove to the Board of Zoning Appeals that <strong>all</strong> of the following items are true. Please provide detailed comments for each item below.
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="A">Special conditions exist peculiar to the land or building in question</div>
+        <p class="response-label">Describe the special conditions that are unique to your property:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="B">A literal interpretation of the ordinance (resolution) would deprive the applicant of rights enjoyed by other property owners</div>
+        <p class="response-label">Explain how strict enforcement would be unfair compared to other property owners:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="C">The special conditions do not result from previous actions of the applicant</div>
+        <p class="response-label">Explain that the conditions were not created by your own actions:</p>
+        <div class="write-box"></div>
+      </div>
+
+      <div class="justification-item">
+        <div class="criteria" data-letter="D">The requested variance is the minimum variance that will allow a reasonable use of the land or building</div>
+        <p class="response-label">Explain why the requested variance is the minimum needed:</p>
+        <div class="write-box"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: CERTIFICATION -->
+    <div class="section">
+      <div class="section-title">Section 5 &mdash; Applicant Certification</div>
+
+      <div class="cert-text">
+        I certify that the information contained in this application and its supplements is true and correct. I understand that providing false information may result in denial of the variance and/or revocation of any approval granted.
+      </div>
+
+      <div class="sig-row">
+        <div class="sig-group">
+          <div class="sig-line"></div>
+          <div class="sig-label">Signature of Applicant</div>
+        </div>
+        <div class="sig-group narrow">
+          <div class="sig-line"></div>
+          <div class="sig-label">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFICE USE ONLY -->
+    <div class="office-use">
+      <div class="section-title">For Office Use Only</div>
+
+      <div class="form-row">
+        <div class="form-group third-width">
+          <label>Application No.</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Date Filed</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Fee Paid ($)</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group third-width">
+          <label>Notice to Parties</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Notice to Newspapers</label>
+          <div class="write-line"></div>
+        </div>
+        <div class="form-group third-width">
+          <label>Public Hearing Date</label>
+          <div class="write-line"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:6px;">Decision of Board of Zoning Appeals</label>
+        <div class="option-row">
+          <div class="option-item">
+            <input type="radio" name="decision" disabled>
+            <span>Approved</span>
+          </div>
+          <div class="option-item">
+            <input type="radio" name="decision" disabled>
+            <span>Denied</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:8px;">If Approved, Conditions and Safeguards</label>
+        <div class="conditions-grid">
+          <div class="condition-line"><span>1.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>2.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>3.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>4.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>5.</span><div class="write-line"></div></div>
+          <div class="condition-line"><span>6.</span><div class="write-line"></div></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:9pt; font-weight:700; text-transform:uppercase; color:#333; display:block; margin-bottom:6px;">If Denied, Reason for Denial</label>
+        <div class="write-box short"></div>
+      </div>
+
+      <div class="sig-row">
+        <div class="sig-group">
+          <div class="sig-line"></div>
+          <div class="sig-label">Board of Zoning Appeals</div>
+        </div>
+        <div class="sig-group narrow">
+          <div class="sig-line"></div>
+          <div class="sig-label">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Clinton Township, Shelby County, Ohio &nbsp;&mdash;&nbsp; Questions? Contact the Zoning Administrator</p>
+      <p class="office-note">Note: One (1) copy to be filed with the Zoning Administrator and two (2) with the Board of Zoning Appeals.</p>
+    </div>
+
+  </div>
+
+  <button class="print-btn" onclick="window.print()">Print Form</button>
+</body>
+</html>

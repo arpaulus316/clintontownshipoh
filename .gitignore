@@ -1,0 +1,31 @@
+# Only the public website is tracked. Everything else in this folder
+# (letters, permits, COIs, attorney emails, drafts) is township records
+# and stays out of the repository. To publish a new file on the site,
+# add a "!" line for it below.
+/*
+!/.gitignore
+!/index.html
+!/robots.txt
+!/sitemap.xml
+!/README.md
+!/SETUP_GUIDE.md
+
+!/forms/
+/forms/*
+!/forms/*.html
+!/forms/application_for_zoning_permit.pdf
+!/forms/Sign permit.pdf
+!/forms/Variance application Page 1.pdf
+!/forms/Variance application Page 2.pdf
+
+!/files/
+/files/*
+!/files/2025-08-04_ClintonTwp Zoning MAP.pdf
+!/files/Shelby_County_Auditor_Help.pptx
+!/files/Regulations/
+/files/Regulations/*
+!/files/Regulations/Zoning_Regulations_2022_Amended.pdf
+
+!/meeting results/
+/meeting results/*
+!/meeting results/Bowman_Final_Resolution_Letter.pdf
