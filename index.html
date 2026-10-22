@@ -2617,8 +2617,81 @@
                 <p class="records-empty" id="recordsEmpty">No records match your search.</p>
 
                 <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 1.5rem;">This log is updated as hearings and permits are finalized. For records not yet listed, or to request older records, contact the Zoning Administrator or submit a public records request to the Fiscal Officer.</p>
+
+                <div class="section-header" id="zoning-permits-issued" style="margin-top: 4rem;">
+                    <span class="section-badge">Monthly Report</span>
+                    <h2>Zoning Permits Issued</h2>
+                    <p>Zoning permits issued by Clinton Township, listed by month for the Shelby County Auditor and the public.</p>
+                </div>
+
+                <div class="records-controls">
+                    <select id="permitsMonth" aria-label="Select month"></select>
+                </div>
+
+                <div class="table-container" style="overflow-x: auto;">
+                    <table class="data-table" id="permitsTable">
+                        <thead>
+                            <tr>
+                                <th>Parcel Number</th>
+                                <th>Permit Number</th>
+                                <th>Date Issued</th>
+                                <th>Property Owner</th>
+                                <th>Property Address</th>
+                                <th>Work to Be Done</th>
+                                <th>Cost Estimate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- To add a permit, paste the "Website Row" from Zoning_Permit_Log.xlsx here (newest at top). data-month must be YYYY-MM. -->
+                            <tr data-month="2026-08"><td>02-2603151.003</td><td>ZP-2026-001</td><td>08/18/2026</td><td>Jose Loza</td><td>1348 S. Kuther Rd, Sidney, OH 45365</td><td>Construct an additional accessory building as approved by BZA variance.</td><td>$800</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="records-empty" id="permitsEmpty"></p>
+
+                <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 1.5rem;">Monthly listing begins August 2026. For copies of a zoning permit, contact the Zoning Administrator.</p>
             </div>
         </section>
+        <script>
+            (function () {
+                var START = { y: 2026, m: 7 }; // August 2026 (months are 0-based)
+                var select = document.getElementById('permitsMonth');
+                var rows = Array.prototype.slice.call(document.querySelectorAll('#permitsTable tbody tr'));
+                var empty = document.getElementById('permitsEmpty');
+                var names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                var now = new Date();
+                var y = now.getFullYear(), m = now.getMonth();
+
+                function pad(n) { return (n < 10 ? '0' : '') + n; }
+                while (y > START.y || (y === START.y && m >= START.m)) {
+                    var opt = document.createElement('option');
+                    opt.value = y + '-' + pad(m + 1);
+                    opt.textContent = names[m] + ' ' + y;
+                    select.appendChild(opt);
+                    if (--m < 0) { m = 11; y--; }
+                }
+                var all = document.createElement('option');
+                all.value = '';
+                all.textContent = 'All months';
+                select.appendChild(all);
+
+                function applyMonth() {
+                    var month = select.value;
+                    var visibleCount = 0;
+                    rows.forEach(function (row) {
+                        var visible = !month || row.dataset.month === month;
+                        row.style.display = visible ? '' : 'none';
+                        if (visible) visibleCount++;
+                    });
+                    var label = select.options[select.selectedIndex].textContent;
+                    empty.textContent = month ? 'No zoning permits were issued in ' + label + '.' : 'No zoning permits have been listed yet.';
+                    empty.style.display = visibleCount === 0 ? 'block' : 'none';
+                }
+
+                select.addEventListener('change', applyMonth);
+                applyMonth();
+            })();
+        </script>
         <script>
             (function () {
                 var search = document.getElementById('recordsSearch');
