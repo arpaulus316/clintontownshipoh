@@ -2643,6 +2643,7 @@
                         </thead>
                         <tbody>
                             <!-- To add a permit, paste the "Website Row" from Zoning_Permit_Log.xlsx here (newest at top). data-month must be YYYY-MM. -->
+                            <tr data-month="2026-10"><td>02-1822301.005</td><td>ZP-2026-002</td><td>10/22/2026</td><td>Brandon Whipp</td><td>1920 N. Kuther Rd, Sidney, OH 45365</td><td>Install ground-mounted solar array: 30 modules, 13.2 kW DC / 10.47 kW AC, approx. 56'-5" x 11'-4", ground-screw foundation, per V2 plan set dated 10/5/2026.</td><td>$34,527</td></tr>
                             <tr data-month="2026-08"><td>02-2603151.003</td><td>ZP-2026-001</td><td>08/18/2026</td><td>Jose Loza</td><td>1348 S. Kuther Rd, Sidney, OH 45365</td><td>Construct an additional accessory building as approved by BZA variance.</td><td>$800</td></tr>
                         </tbody>
                     </table>
@@ -2983,7 +2984,7 @@
             }
 
             // Generate reference number (for the applicant's own records)
-            const refNum = 'ZP-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+            const refNum = 'APP-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
             document.getElementById('refNumber').textContent = refNum;
 
             // Open a pre-filled email to the Zoning Officer with the application details
