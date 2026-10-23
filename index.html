@@ -2569,6 +2569,26 @@
             #records .data-table td { vertical-align: top; }
             #records .record-detail-link { color: var(--accent-dark); font-weight: 600; text-decoration: none; white-space: nowrap; }
             #records .record-detail-link:hover { text-decoration: underline; }
+            /* On phones, show each record as a card with labeled fields instead of a wide table */
+            @media (max-width: 768px) {
+                #records .data-table thead { display: none; }
+                #records .data-table,
+                #records .data-table tbody,
+                #records .data-table tr,
+                #records .data-table td { display: block; width: 100%; }
+                #records .data-table tr { padding: 0.75rem 0; border-bottom: 1px solid var(--gray-200); }
+                #records .data-table tr:last-child { border-bottom: none; }
+                #records .data-table td { padding: 0.35rem 1.25rem; border-bottom: none; overflow-wrap: anywhere; }
+                #records .data-table td::before {
+                    content: attr(data-label);
+                    display: block;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    letter-spacing: 0.05em;
+                    text-transform: uppercase;
+                    color: var(--gray-500);
+                }
+            }
         </style>
         <section class="events-section">
             <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
@@ -2655,6 +2675,14 @@
         </section>
         <script>
             (function () {
+                // Label each cell with its column heading for the phone card layout
+                document.querySelectorAll('#records .data-table').forEach(function (table) {
+                    var heads = Array.prototype.map.call(table.querySelectorAll('thead th'), function (th) { return th.textContent.trim(); });
+                    table.querySelectorAll('tbody tr').forEach(function (tr) {
+                        Array.prototype.forEach.call(tr.children, function (td, i) { if (heads[i]) td.setAttribute('data-label', heads[i]); });
+                    });
+                });
+
                 var START = { y: 2026, m: 7 }; // August 2026 (months are 0-based)
                 var select = document.getElementById('permitsMonth');
                 var rows = Array.prototype.slice.call(document.querySelectorAll('#permitsTable tbody tr'));
